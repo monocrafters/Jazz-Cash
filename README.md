@@ -24,6 +24,7 @@ The sample history ends on 8 October 2026 (the requested scenario date), with 18
 - Tap the balance to open Transaction History through the yellow dotted loader.
 - Filter by date, category, received or sent payments; switch to Spending.
 - Tap a transaction or its Receipt button for the shared ANSAR-style receipt screen, with the same emblem, typography, card, purpose and fee rows. Received and sent entries retain their own direction, amount, name and date.
+- History distinguishes JazzCash recipients, masked RAAST IDs, RAAST credits and ReadyCash total repayments. Receipt wording follows the payment type; repayments and incoming credits do not offer Repeat.
 - Repeat opens an editable demo payment. Amount validation prevents spending beyond the sample balance.
 - Save exports a visibly marked sample receipt. Share copies sample transaction text. Statement downloads a sample CSV.
 - Explore money transfer, bills, mobile load, cards, QR simulation, rewards and profile.
@@ -35,6 +36,7 @@ No phone authentication, OTP, MPIN, payment credentials, banking APIs or backend
 
 - `dist/index.html` — app shell
 - `dist/app.js` — screens, UI state, simulated interactions
+- `dist/transaction-presentation.js` — payment-specific history labels and receipt wording
 - `dist/native-icons.js` — hand-drawn two-colour symbols from the Android close-ups
 - `dist/loader.js` — animated SVG dots and rounded arcs
 - `dist/styles.css` — responsive Android layout and animations

@@ -1,4 +1,5 @@
 import { nativeIcon } from "./native-icons.js";
+import { transactionPresentation } from "./transaction-presentation.js";
 import { loaderMarkup, animateLoader, LOADER_CYCLE_MS } from "./loader.js";
 
 const paths = {
@@ -143,6 +144,7 @@ const initialTransactions = [
   },
   {
     name: "Sara Khan",
+    method: "Raast",
     type: "Money Transfer",
     amount: -1200,
     date: "07 October, 2026 | 01:35 PM",
@@ -240,6 +242,7 @@ const initialTransactions = [
   },
   {
     name: "JazzCash account",
+    method: "Raast",
     type: "Money Transfer",
     amount: -100,
     date: "06 October, 2026 | 11:20 AM",
@@ -419,7 +422,7 @@ function historyRows(items) {
   return items
     .map(
       (t, i) =>
-        `<div class="native-transaction-group">${i === 0 || items[i - 1].date.split("|")[0] !== t.date.split("|")[0] ? `<div class="native-date">${escapeHtml(t.date)}</div>` : ""}<article class="native-transaction"><button class="native-transaction-main" data-action="transaction" data-index="${transactions.indexOf(t)}" aria-label="View ${escapeHtml(t.name)} ${money(Math.abs(t.amount))} receipt"><span class="native-direction ${t.amount > 0 ? "incoming" : "outgoing"}">${icon("arrow")}</span><span class="native-transaction-copy">${t.type !== "Education" ? `<span class="native-type">${escapeHtml(t.type)}</span>` : ""}<strong>Rs. ${money(Math.abs(t.amount))}</strong><span class="native-counterparty">${escapeHtml(t.subtitle || t.name)}</span></span></button><div class="transaction-actions">${t.amount < 0 && t.type !== "ReadyCash" ? `<button data-action="repeat-transaction" data-index="${transactions.indexOf(t)}">${icon("repeat-money")} Repeat</button>` : ""}<button data-action="transaction" data-index="${transactions.indexOf(t)}">${icon("receipt")} Receipt</button></div></article></div>`,
+        `<div class="native-transaction-group">${i === 0 || items[i - 1].date.split("|")[0] !== t.date.split("|")[0] ? `<div class="native-date">${escapeHtml(t.date)}</div>` : ""}<article class="native-transaction"><button class="native-transaction-main" data-action="transaction" data-index="${transactions.indexOf(t)}" aria-label="View ${escapeHtml(t.name)} ${money(Math.abs(t.amount))} receipt"><span class="native-direction ${t.amount > 0 ? "incoming" : "outgoing"}">${icon("arrow")}</span><span class="native-transaction-copy">${t.type !== "Education" ? `<span class="native-type">${escapeHtml(t.type)}</span>` : ""}<strong>Rs. ${money(Math.abs(t.amount))}</strong><span class="native-counterparty">${escapeHtml(transactionPresentation(t).subtitle)}</span></span></button><div class="transaction-actions">${transactionPresentation(t).canRepeat ? `<button data-action="repeat-transaction" data-index="${transactions.indexOf(t)}">${icon("repeat-money")} Repeat</button>` : ""}<button data-action="transaction" data-index="${transactions.indexOf(t)}">${icon("receipt")} Receipt</button></div></article></div>`,
     )
     .join("");
 }
@@ -460,26 +463,11 @@ function receiptDate(value) {
 }
 function transactionDetails() {
   const t = state.selectedTransaction || transactions[0];
-  const channel =
-    t.receiptChannel ||
-    (t.amount > 0
-      ? "Received in JazzCash"
-      : t.type === "Money Transfer"
-        ? "Transferred to JazzCash"
-        : "Payment completed");
-  const account = "*******" + (String(t.account || "").replace(/\D/g, "").slice(-4) || "0000");
+  const presentation = transactionPresentation(t);
+  const { channel, account, purpose, direction, recipient, canRepeat } = presentation;
   const tear = '<div class="receipt-tear"><i></i><i></i></div>';
-  const purpose = t.purpose || ({
-    Education: "Education",
-    "Bill Payment": "Bill Payment",
-    "Bill payment": "Bill Payment",
-    "Merchant Payment": "Shopping",
-    "Mobile Load": "Mobile Load",
-    "Mobile load": "Mobile Load",
-    ReadyCash: "Repayment",
-  }[t.type] || "Others");
   const extras = `${detail("Purpose of Payment", purpose)}${tear}<div class="detail receipt-fee"><span>Transaction Fee</span><b class="free-fee">${escapeHtml(t.fee || "Free")}</b></div>`;
-  return `<div class="native-receipt reference-wallet-receipt"><button class="receipt-back" data-action="back" aria-label="Go back">${icon("back")}</button><div class="receipt-brand-emblem">${brandMark()}</div><p class="native-receipt-date">${escapeHtml(receiptDate(t.date))}</p><h1>Transaction Successful</h1><p class="receipt-channel">${escapeHtml(channel)}</p><div class="native-receipt-card"><h2>${nativeAmount(t.amount)}</h2><p>${t.amount > 0 ? "received from" : "transferred to"}</p><h3>${escapeHtml(t.name.toUpperCase())}</h3><span class="receipt-account">${escapeHtml(account)}</span>${tear}${detail("Transaction Amount", "Rs. " + money(Math.abs(t.amount)))}${extras}${detail("TID", t.id || "DEMO-SAMPLE")}<span class="receipt-sample-stamp"></span></div><div class="securely-sent">Securely sent via ${brandMark()}</div><div class="native-receipt-actions"><button data-action="save-receipt">${icon("download")} Save</button><button data-action="share-receipt">${icon("share")} Share</button><button class="repeat-round" data-action="repeat-selected" aria-label="Repeat this payment">${icon("repeat-money")}</button></div></div>`;
+  return `<div class="native-receipt reference-wallet-receipt"><button class="receipt-back" data-action="back" aria-label="Go back">${icon("back")}</button><div class="receipt-brand-emblem">${brandMark()}</div><p class="native-receipt-date">${escapeHtml(receiptDate(t.date))}</p><h1>Transaction Successful</h1><p class="receipt-channel">${escapeHtml(channel)}</p><div class="native-receipt-card"><h2>${nativeAmount(t.amount)}</h2><p>${escapeHtml(direction)}</p><h3>${escapeHtml(recipient.toUpperCase())}</h3><span class="receipt-account">${escapeHtml(account)}</span>${tear}${detail("Transaction Amount", "Rs. " + money(Math.abs(t.amount)))}${extras}${detail("TID", t.id || "DEMO-SAMPLE")}<span class="receipt-sample-stamp"></span></div><div class="securely-sent">Securely sent via ${brandMark()}</div><div class="native-receipt-actions"><button data-action="save-receipt">${icon("download")} Save</button><button data-action="share-receipt">${icon("share")} Share</button>${canRepeat ? `<button class="repeat-round" data-action="repeat-selected" aria-label="Repeat this payment">${icon("repeat-money")}</button>` : ""}</div></div>`;
 }
 
 function qrArt() {
@@ -813,6 +801,7 @@ function commitDemo() {
       ) / 100;
     const t = {
       name: state.recipient,
+      method: state.method,
       type: {
         send: "Money Transfer",
         bill: "Bill payment",
@@ -938,9 +927,10 @@ document.addEventListener("click", (e) => {
       a === "repeat-selected"
         ? state.selectedTransaction
         : transactions[Number(b.dataset.index)];
-    state.method = "JazzCash";
+    if (!t || !transactionPresentation(t).canRepeat) return;
+    state.method = t.method || "JazzCash";
     return startAmount(
-      "send",
+      t.type.toLowerCase() === "mobile load" ? "load" : t.type === "Money Transfer" ? "send" : "bill",
       t.name,
       t.account || "03000000001",
       Math.abs(t.amount),

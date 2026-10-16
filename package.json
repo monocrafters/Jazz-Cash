@@ -6,6 +6,6 @@
   "scripts": {
     "dev": "node server.mjs",
     "start": "node server.mjs",
-    "check": "node --check dist/app.js && node --check dist/native-icons.js && node --check dist/loader.js"
+    "check": "node --check dist/app.js && node --check dist/native-icons.js && node --check dist/loader.js && node --check dist/transaction-presentation.js"
   }
 }
