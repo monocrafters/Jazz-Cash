@@ -4073,7 +4073,7 @@ dialog::backdrop {
   font-weight: 600;
 }
 
-/* Other Wallet receipt, measured from IMG-20261006-WA0041. */
+/* Shared receipt layout, measured from IMG-20261006-WA0041. */
 .reference-wallet-receipt {
   padding: 34px 17px 38px;
   color: #242424;
@@ -4152,6 +4152,7 @@ dialog::backdrop {
   line-height: 23px;
   font-weight: 600;
   color: #111;
+  overflow-wrap: anywhere;
 }
 .reference-wallet-receipt .receipt-account {
   display: block;
@@ -4181,6 +4182,8 @@ dialog::backdrop {
   color: #242424;
   font-size: 14.5px;
   font-weight: 500;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 .reference-wallet-receipt .native-receipt-card .detail b.free-fee {
   padding: 2px 9px;

@@ -106,7 +106,7 @@ const initialTransactions = [
     account: "0300 000 0001",
   },
   {
-    name: "Demo Grocery Store",
+    name: "Al Madina Grocery Store",
     type: "Merchant Payment",
     amount: -980,
     date: "08 October, 2026 | 03:15 PM",
@@ -229,7 +229,6 @@ const initialTransactions = [
     receiptChannel: "Transferred via Other Wallet",
     purpose: "Others",
     fee: "Free",
-    referenceReceipt: true,
   },
   {
     name: "RAAST Credit",
@@ -343,13 +342,13 @@ function amountView() {
         loan: "ReadyCash",
       }[state.type] || "Enter Amount",
     ) +
-    `<div class="page-body"><div class="recipient-summary"><span class="contact-avatar ${adding ? "yellow" : ""}">${icon(adding ? "plus" : state.type === "bill" ? "bill" : state.type === "load" ? "phone" : "user")}</span><b>${escapeHtml(state.recipient || "Demo account")}</b><span>${escapeHtml(state.recipientNumber || state.method)}</span></div><form id="amount-form"><label for="amount">${adding ? "Amount to add" : "Enter amount"}</label><div class="amount-input"><span>Rs.</span><input id="amount" name="amount" type="number" inputmode="decimal" min="1" max="50000" step="0.01" placeholder="0" value="${state.amount || ""}" autocomplete="off"></div><div class="amount-chips">${[100, 500, 1000, 5000].map((n) => `<button type="button" data-action="amount-preset" data-value="${n}">Rs. ${n.toLocaleString()}</button>`).join("")}</div><div class="balance-hint">Available balance <b>Rs. ${money(state.balance)}</b></div>${state.type === "loan" ? '<p class="info-note">ReadyCash UI preview only. No loan application, approval, or agreement is created.</p>' : ""}<label for="note">Note <span class="optional">(optional)</span></label><input id="note" name="note" placeholder="What is this for?" maxlength="70" value="${escapeHtml(state.note || "")}"><p id="form-error" class="form-error" role="alert"></p><button class="primary" type="submit">Continue</button></form><p class="sample-note">Demo balance · No real money will move</p></div>`
+    `<div class="page-body"><div class="recipient-summary"><span class="contact-avatar ${adding ? "yellow" : ""}">${icon(adding ? "plus" : state.type === "bill" ? "bill" : state.type === "load" ? "phone" : "user")}</span><b>${escapeHtml(state.recipient || "JazzCash account")}</b><span>${escapeHtml(state.recipientNumber || state.method)}</span></div><form id="amount-form"><label for="amount">${adding ? "Amount to add" : "Enter amount"}</label><div class="amount-input"><span>Rs.</span><input id="amount" name="amount" type="number" inputmode="decimal" min="1" max="50000" step="0.01" placeholder="0" value="${state.amount || ""}" autocomplete="off"></div><div class="amount-chips">${[100, 500, 1000, 5000].map((n) => `<button type="button" data-action="amount-preset" data-value="${n}">Rs. ${n.toLocaleString()}</button>`).join("")}</div><div class="balance-hint">Available balance <b>Rs. ${money(state.balance)}</b></div>${state.type === "loan" ? '<p class="info-note">ReadyCash UI preview only. No loan application, approval, or agreement is created.</p>' : ""}<label for="note">Note <span class="optional">(optional)</span></label><input id="note" name="note" placeholder="What is this for?" maxlength="70" value="${escapeHtml(state.note || "")}"><p id="form-error" class="form-error" role="alert"></p><button class="primary" type="submit">Continue</button></form><p class="sample-note">Demo balance · No real money will move</p></div>`
   );
 }
 function review() {
   return (
     heading("Review Details") +
-    `<div class="page-body"><div class="review-amount"><span>You are ${["add", "loan"].includes(state.type) ? "adding" : "sending"}</span><h2>Rs. ${money(state.amount)}</h2><span class="demo-badge">SIMULATED PAYMENT</span></div><div class="detail-card">${detail("To", state.recipient)}${detail("Account", state.recipientNumber || "Demo wallet")}${detail("Payment type", { send: state.method, bill: "Bill payment", load: "Mobile load", add: "Add money", loan: "ReadyCash demo" }[state.type])}${detail("Amount", "Rs. " + money(state.amount))}${detail("Fee", "Rs. 0.00")}${state.note ? detail("Note", state.note) : ""}<div class="detail-total">${detail("Total", "Rs. " + money(state.amount))}</div></div><p class="info-note">This is a portfolio demo. Confirming only updates the sample balance on this page.</p>${btn("Confirm demo payment", "confirm")}<button class="text-button" data-action="back">Edit details</button></div>`
+    `<div class="page-body"><div class="review-amount"><span>You are ${["add", "loan"].includes(state.type) ? "adding" : "sending"}</span><h2>Rs. ${money(state.amount)}</h2><span class="demo-badge">SIMULATED PAYMENT</span></div><div class="detail-card">${detail("To", state.recipient)}${detail("Account", state.recipientNumber || "JazzCash wallet")}${detail("Payment type", { send: state.method, bill: "Bill payment", load: "Mobile load", add: "Add money", loan: "ReadyCash" }[state.type])}${detail("Amount", "Rs. " + money(state.amount))}${detail("Fee", "Rs. 0.00")}${state.note ? detail("Note", state.note) : ""}<div class="detail-total">${detail("Total", "Rs. " + money(state.amount))}</div></div><p class="info-note">This is a portfolio demo. Confirming only updates the sample balance on this page.</p>${btn("Confirm demo payment", "confirm")}<button class="text-button" data-action="back">Edit details</button></div>`
   );
 }
 const detail = (a, b) =>
@@ -469,10 +468,17 @@ function transactionDetails() {
         ? "Transferred to JazzCash"
         : "Payment completed");
   const tear = '<div class="receipt-tear"><i></i><i></i></div>';
-  const extras = t.referenceReceipt
-    ? `${detail("Purpose of Payment", t.purpose)}${tear}<div class="detail receipt-fee"><span>Transaction Fee</span><b class="free-fee">${escapeHtml(t.fee)}</b></div>`
-    : "";
-  return `<div class="native-receipt ${t.referenceReceipt ? "reference-wallet-receipt" : ""}"><button class="receipt-back" data-action="back" aria-label="Go back">${icon("back")}</button><div class="receipt-brand-emblem">${brandMark()}${t.referenceReceipt ? "" : "<i></i><i></i><i></i><i></i>"}</div><p class="native-receipt-date">${escapeHtml(receiptDate(t.date))}</p><h1>Transaction Successful</h1><p class="receipt-channel">${escapeHtml(channel)}</p><div class="native-receipt-card"><h2>${nativeAmount(t.amount)}</h2><p>${t.amount > 0 ? "received from" : "transferred to"}</p><h3>${escapeHtml(t.name.toUpperCase())}</h3><span class="receipt-account">${escapeHtml(t.account || "0300 000 0001")}</span>${tear}${detail("Transaction Amount", "Rs. " + money(Math.abs(t.amount)))}${extras}${detail("TID", t.id || "DEMO-SAMPLE")}<span class="receipt-sample-stamp"></span></div><div class="securely-sent">Securely sent via ${brandMark()}</div><div class="native-receipt-actions"><button data-action="save-receipt">${icon("download")} Save</button><button data-action="share-receipt">${icon("share")} Share</button><button class="repeat-round" data-action="repeat-selected" aria-label="Repeat this payment">${icon("repeat-money")}</button></div></div>`;
+  const purpose = t.purpose || ({
+    Education: "Education",
+    "Bill Payment": "Bill Payment",
+    "Bill payment": "Bill Payment",
+    "Merchant Payment": "Shopping",
+    "Mobile Load": "Mobile Load",
+    "Mobile load": "Mobile Load",
+    ReadyCash: "Repayment",
+  }[t.type] || "Others");
+  const extras = `${detail("Purpose of Payment", purpose)}${tear}<div class="detail receipt-fee"><span>Transaction Fee</span><b class="free-fee">${escapeHtml(t.fee || "Free")}</b></div>`;
+  return `<div class="native-receipt reference-wallet-receipt"><button class="receipt-back" data-action="back" aria-label="Go back">${icon("back")}</button><div class="receipt-brand-emblem">${brandMark()}</div><p class="native-receipt-date">${escapeHtml(receiptDate(t.date))}</p><h1>Transaction Successful</h1><p class="receipt-channel">${escapeHtml(channel)}</p><div class="native-receipt-card"><h2>${nativeAmount(t.amount)}</h2><p>${t.amount > 0 ? "received from" : "transferred to"}</p><h3>${escapeHtml(t.name.toUpperCase())}</h3><span class="receipt-account">${escapeHtml(t.account || "0300 000 0001")}</span>${tear}${detail("Transaction Amount", "Rs. " + money(Math.abs(t.amount)))}${extras}${detail("TID", t.id || "DEMO-SAMPLE")}<span class="receipt-sample-stamp"></span></div><div class="securely-sent">Securely sent via ${brandMark()}</div><div class="native-receipt-actions"><button data-action="save-receipt">${icon("download")} Save</button><button data-action="share-receipt">${icon("share")} Share</button><button class="repeat-round" data-action="repeat-selected" aria-label="Repeat this payment">${icon("repeat-money")}</button></div></div>`;
 }
 
 function qrArt() {
@@ -811,7 +817,7 @@ function commitDemo() {
         bill: "Bill payment",
         load: "Mobile load",
         add: "Money added",
-        loan: "ReadyCash demo",
+        loan: "ReadyCash",
       }[state.type],
       amount: incoming ? state.amount : -state.amount,
       account: state.recipientNumber || "0300 000 0000",
@@ -958,7 +964,7 @@ document.addEventListener("click", (e) => {
     );
   if (a === "corporate") {
     state.method = "Corporate payment";
-    return startAmount("bill", "Demo Corporate Payment", "DEMO-CORPORATE", 100);
+    return startAmount("bill", "Corporate Payment", "DEMO-CORPORATE", 100);
   }
   if (a === "committee")
     return info(
@@ -1082,7 +1088,7 @@ document.addEventListener("click", (e) => {
   if (a === "scan-demo")
     return loading(() => {
       state.method = "QR payment";
-      startAmount("send", "Demo Corner Store", "DEMO-MERCHANT", 250);
+      startAmount("send", "Ahmed General Store", "DEMO-MERCHANT", 250);
     }, "Reading demo QR…");
   if (a === "copy-demo")
     return copy("DEMO ACCOUNT — 03000000000 — not a real payment account");
@@ -1156,7 +1162,7 @@ document.addEventListener("click", (e) => {
   if (a === "account-details")
     return modal(
       "Account Details",
-      `${detail("Account name", "Muhammad Mohsin")}${detail("Mobile number", "0300 000 0000")}${detail("Account type", "Demo wallet")}${detail("Balance", "Rs. " + money(state.balance))}<p class="sample-note">All account information is fictional.</p>`,
+      `${detail("Account name", "Muhammad Mohsin")}${detail("Mobile number", "0300 000 0000")}${detail("Account type", "JazzCash wallet")}${detail("Balance", "Rs. " + money(state.balance))}<p class="sample-note">All account information is fictional.</p>`,
       btn("Done", "close"),
     );
   if (a === "notifications")
@@ -1291,10 +1297,10 @@ document.addEventListener("click", (e) => {
     return startAmount(
       "bill",
       a === "education"
-        ? "Demo Education Fee"
+        ? "Education Fee"
         : a === "donation"
-          ? "Demo Donation"
-          : "Demo Government Payment",
+          ? "Donation"
+          : "Government Payment",
       "SAMPLE-REFERENCE",
       500,
     );
@@ -1311,7 +1317,7 @@ document.addEventListener("click", (e) => {
   if (a === "travel-pay") {
     closeModal();
     state.method = "Travel";
-    return startAmount("bill", "Demo Travel Ticket", "LAH-ISB-DEMO", 2500);
+    return startAmount("bill", "Travel Ticket", "LAH-ISB-DEMO", 2500);
   }
   if (a === "invite")
     return copy(
@@ -1350,8 +1356,8 @@ document.addEventListener("submit", (e) => {
         : number === "03000000002"
           ? "Sara Khan"
           : method === "Bank Account"
-            ? `${$("#bank").value} Demo Account`
-            : "Demo Recipient",
+            ? `${$("#bank").value} Account`
+            : "Account Holder",
       number,
     );
   }

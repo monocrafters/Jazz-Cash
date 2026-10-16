@@ -23,7 +23,7 @@ The sample history ends on 8 October 2026 (the requested scenario date), with 18
 - Refresh Balance shows a small inline loader for two 2-second cycles, then restores the sample balance.
 - Tap the balance to open Transaction History through the yellow dotted loader.
 - Filter by date, category, received or sent payments; switch to Spending.
-- Tap a transaction or its Receipt button for the receipt screen.
+- Tap a transaction or its Receipt button for the shared ANSAR-style receipt screen, with the same emblem, typography, card, purpose and fee rows. Received and sent entries retain their own direction, amount, name and date.
 - Repeat opens an editable demo payment. Amount validation prevents spending beyond the sample balance.
 - Save exports a visibly marked sample receipt. Share copies sample transaction text. Statement downloads a sample CSV.
 - Explore money transfer, bills, mobile load, cards, QR simulation, rewards and profile.
