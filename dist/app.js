@@ -467,6 +467,7 @@ function transactionDetails() {
       : t.type === "Money Transfer"
         ? "Transferred to JazzCash"
         : "Payment completed");
+  const account = "*******" + (String(t.account || "").replace(/\D/g, "").slice(-4) || "0000");
   const tear = '<div class="receipt-tear"><i></i><i></i></div>';
   const purpose = t.purpose || ({
     Education: "Education",
@@ -478,7 +479,7 @@ function transactionDetails() {
     ReadyCash: "Repayment",
   }[t.type] || "Others");
   const extras = `${detail("Purpose of Payment", purpose)}${tear}<div class="detail receipt-fee"><span>Transaction Fee</span><b class="free-fee">${escapeHtml(t.fee || "Free")}</b></div>`;
-  return `<div class="native-receipt reference-wallet-receipt"><button class="receipt-back" data-action="back" aria-label="Go back">${icon("back")}</button><div class="receipt-brand-emblem">${brandMark()}</div><p class="native-receipt-date">${escapeHtml(receiptDate(t.date))}</p><h1>Transaction Successful</h1><p class="receipt-channel">${escapeHtml(channel)}</p><div class="native-receipt-card"><h2>${nativeAmount(t.amount)}</h2><p>${t.amount > 0 ? "received from" : "transferred to"}</p><h3>${escapeHtml(t.name.toUpperCase())}</h3><span class="receipt-account">${escapeHtml(t.account || "0300 000 0001")}</span>${tear}${detail("Transaction Amount", "Rs. " + money(Math.abs(t.amount)))}${extras}${detail("TID", t.id || "DEMO-SAMPLE")}<span class="receipt-sample-stamp"></span></div><div class="securely-sent">Securely sent via ${brandMark()}</div><div class="native-receipt-actions"><button data-action="save-receipt">${icon("download")} Save</button><button data-action="share-receipt">${icon("share")} Share</button><button class="repeat-round" data-action="repeat-selected" aria-label="Repeat this payment">${icon("repeat-money")}</button></div></div>`;
+  return `<div class="native-receipt reference-wallet-receipt"><button class="receipt-back" data-action="back" aria-label="Go back">${icon("back")}</button><div class="receipt-brand-emblem">${brandMark()}</div><p class="native-receipt-date">${escapeHtml(receiptDate(t.date))}</p><h1>Transaction Successful</h1><p class="receipt-channel">${escapeHtml(channel)}</p><div class="native-receipt-card"><h2>${nativeAmount(t.amount)}</h2><p>${t.amount > 0 ? "received from" : "transferred to"}</p><h3>${escapeHtml(t.name.toUpperCase())}</h3><span class="receipt-account">${escapeHtml(account)}</span>${tear}${detail("Transaction Amount", "Rs. " + money(Math.abs(t.amount)))}${extras}${detail("TID", t.id || "DEMO-SAMPLE")}<span class="receipt-sample-stamp"></span></div><div class="securely-sent">Securely sent via ${brandMark()}</div><div class="native-receipt-actions"><button data-action="save-receipt">${icon("download")} Save</button><button data-action="share-receipt">${icon("share")} Share</button><button class="repeat-round" data-action="repeat-selected" aria-label="Repeat this payment">${icon("repeat-money")}</button></div></div>`;
 }
 
 function qrArt() {
