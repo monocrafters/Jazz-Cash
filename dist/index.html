@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#652027" />
+    <meta
+      name="description"
+      content="An unofficial JazzCash Android UI portfolio recreation. Interactive frontend demo with sample data only."
+    />
+    <title>JazzCash Android · Portfolio Demo</title>
+    <link rel="icon" href="assets/jazzcash-logo.png" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="studio-header">
+      <div class="studio-brand">
+        <img src="assets/jazzcash-logo.png" alt="JazzCash" /><span
+          >Android UI recreation</span
+        >
+      </div>
+      <span class="portfolio-tag">PORTFOLIO PROJECT</span>
+    </header>
+    <main class="stage">
+      <div class="device">
+        <div id="screen" class="screen"></div>
+        <nav id="bottom-nav" hidden aria-label="Main navigation"></nav>
+        <div id="overlay"></div>
+        <div id="toast" role="status" class="toast"></div>
+      </div>
+    </main>
+    <footer class="studio-footer">
+      <span>Made for the browser. Inspired by Android.</span
+      ><button data-action="splash">Replay splash</button
+      ><button data-action="about">About this project</button>
+    </footer>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
